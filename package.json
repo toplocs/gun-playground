@@ -1,0 +1,24 @@
+{
+  "name": "gun-playground",
+  "version": "1.0.0",
+  "description": "A playground for experimenting with Gun.js, Express and Vue",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter server start"
+  },
+  "keywords": [
+    "gun",
+    "gundb",
+    "express",
+    "vue",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=7"
+  }
+}
