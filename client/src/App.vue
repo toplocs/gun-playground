@@ -8,7 +8,7 @@
       <div class="gun-demo">
         <h2>Gun.js Demo</h2>
         <div class="form-group">
-          <label for="key">Key:</label>
+          <label for="key">tribelike node:</label>
           <input type="text" id="key" v-model="dataKey" placeholder="Enter a key" />
         </div>
         <div class="form-group">
@@ -33,59 +33,59 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
 import Gun from 'gun';
+// import 'gun/sea';
+// import 'gun/axe';
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-    const dataKey = ref('');
-    const dataValue = ref('');
-    const result = ref('');
+const dataKey = ref('');
+const dataValue = ref('');
+const result = ref('');
 
-    // Initialize Gun
-    const gun = Gun('http://localhost:3000/gun');
+// Initialize Gun
+const gun = Gun(
+  'http://localhost:3000/gun'
+);
+const tb = gun.get('tribelike');
 
-    const saveData = () => {
-      if (!dataKey.value) {
-        result.value = 'Error: Please provide a key';
-        return;
-      }
-
-      gun.get(dataKey.value).put({ value: dataValue.value }, (ack) => {
-        if (ack.err) {
-          result.value = `Error: ${ack.err}`;
-        } else {
-          result.value = `Saved: ${dataKey.value} = ${dataValue.value}`;
-        }
-      });
-    };
-
-    const loadData = () => {
-      if (!dataKey.value) {
-        result.value = 'Error: Please provide a key';
-        return;
-      }
-
-      gun.get(dataKey.value).on((data) => {
-        if (data && data.value !== undefined) {
-          result.value = `Loaded: ${dataKey.value} = ${data.value}`;
-          dataValue.value = data.value;
-        } else {
-          result.value = `No data found for key: ${dataKey.value}`;
-        }
-      });
-    };
-
-    return {
-      dataKey,
-      dataValue,
-      result,
-      saveData,
-      loadData
-    };
+const saveData = () => {
+  if (!dataKey.value) {
+    result.value = 'Error: Please provide a key';
+    return;
   }
+
+  tb.get('heartbeat').put(dataValue.value, (ack) => {
+    if (ack && 'err' in ack && ack.err) {
+      result.value = `Error: ${ack.err}`;
+    } else {
+      result.value = `Saved: ${dataKey.value} = ${dataValue.value}`;
+    }
+  });
+};
+
+const loadData = () => {
+  if (!dataKey.value) {
+    result.value = 'Error: Please provide a key';
+    return;
+  }
+
+  tb.get('heartbeat').on((data) => {
+    if (data && data.value !== undefined) {
+      result.value = `Loaded: ${data.value}`;
+    } else {
+      result.value = `No data found for heartbeat`;
+    }
+  });
+};
+
+onMounted(() => {
+  tb.get('heartbeat').on((data) => {
+    console.log('data:', data);
+    if (data) {
+      result.value = `Data: ${data}`;
+    }
+  });
 });
 </script>
 

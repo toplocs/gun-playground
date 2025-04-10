@@ -4,7 +4,7 @@
   "description": "A playground for experimenting with Gun.js, Express and Vue",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel -r dev",
+    "dev": "PORT=3000 pnpm -F server dev & PORT=3001 pnpm -F server dev & pnpm -F client dev",
     "build": "pnpm -r build",
     "start": "pnpm --filter server start"
   },
